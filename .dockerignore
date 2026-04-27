@@ -1,0 +1,9 @@
+.git
+.next
+node_modules
+frontend/.next
+frontend/node_modules
+__pycache__
+**/__pycache__
+*.pyc
+postgres_data

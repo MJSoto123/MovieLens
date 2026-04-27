@@ -1,0 +1,1 @@
+"""Núcleo manual del recomendador."""

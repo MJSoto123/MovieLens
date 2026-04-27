@@ -1,0 +1,72 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    container_name: movielens-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: movielens-backend
+    ports:
+      - "8000:8000"
+    environment:
+      DATASET_DIR: /app/data/raw/ml-latest-small
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/movielens
+      TMDB_API_KEY: ${TMDB_API_KEY:-}
+      TMDB_BEARER_TOKEN: ${TMDB_BEARER_TOKEN:-}
+      TMDB_IMAGE_SIZE: ${TMDB_IMAGE_SIZE:-w342}
+    volumes:
+      - ./src:/app/src
+      - ./scripts:/app/scripts
+      - ./data:/app/data
+      - ./requirements.txt:/app/requirements.txt
+    depends_on:
+      - postgres
+
+  seed:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: movielens-seed
+    environment:
+      DATASET_DIR: /app/data/raw/ml-latest-small
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/movielens
+      TMDB_API_KEY: ${TMDB_API_KEY:-}
+      TMDB_BEARER_TOKEN: ${TMDB_BEARER_TOKEN:-}
+      TMDB_IMAGE_SIZE: ${TMDB_IMAGE_SIZE:-w342}
+    volumes:
+      - ./src:/app/src
+      - ./scripts:/app/scripts
+      - ./data:/app/data
+      - ./requirements.txt:/app/requirements.txt
+    depends_on:
+      - postgres
+    command: ["python", "scripts/seed_database.py"]
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: movielens-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: movielens
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d
+
+volumes:
+  postgres_data:
