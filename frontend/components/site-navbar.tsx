@@ -1,19 +1,20 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 
-import { Icon } from "@/components/icons";
-
 type SiteNavbarProps = {
-  active?: "landing" | "recommendations";
+  active?: "landing" | "recommendations" | "knn" | "graph";
   userId?: string;
+  rightControls?: ReactNode;
 };
 
 export function SiteNavbar({
   active = "landing",
   userId = "demo",
+  rightControls,
 }: SiteNavbarProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-white/8 bg-[color:var(--bg)]/80 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4 lg:px-10">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-3">
             <span className="logo-ring" />
@@ -24,30 +25,36 @@ export function SiteNavbar({
 
           <nav className="hidden items-center gap-6 text-sm text-[var(--muted)] md:flex">
             <Link
-              href={`/recommendations/${userId}?metric=pearson`}
+              href={`/graph/${userId}?metric=pearson`}
+              className={active === "graph" ? "text-[var(--fg)]" : "hover:text-[var(--fg)]"}
+            >
+              Grafo
+            </Link>
+            <Link
+              href={`/knn/${userId}?metric=pearson&k=10`}
+              className={active === "knn" ? "text-[var(--fg)]" : "hover:text-[var(--fg)]"}
+            >
+              KNN
+            </Link>
+            <Link
+              href={`/recommendations/${userId}?metric=pearson&k=10`}
               className={active === "recommendations" ? "text-[var(--fg)]" : "hover:text-[var(--fg)]"}
             >
-              Para ti
+              Recomendaciones
             </Link>
-            <Link href="/" className={active === "landing" ? "text-[var(--fg)]" : "hover:text-[var(--fg)]"}>
+            {/* <Link href="/" className={active === "landing" ? "text-[var(--fg)]" : "hover:text-[var(--fg)]"}>
               Inicio
-            </Link>
-            <span className="opacity-50">Arquitectura</span>
-            <span className="opacity-50">Experimentos</span>
+            </Link> */}
+            {/* <span className="opacity-50">Arquitectura</span>
+            <span className="opacity-50">Experimentos</span> */}
           </nav>
         </div>
 
         <div className="flex items-center gap-3">
-          <button
-            type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/8 text-[var(--fg-dim)] transition hover:border-white/15 hover:text-[var(--fg)]"
-            aria-label="Buscar"
-          >
-            <Icon name="search" />
-          </button>
+          {rightControls}
 
           <Link
-            href={`/recommendations/${userId}?metric=pearson`}
+            href={`/recommendations/${userId}?metric=pearson&k=10`}
             className="inline-flex items-center gap-3 rounded-full border border-white/10 px-2 py-1 pr-4 text-sm text-[var(--fg-dim)]"
           >
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[linear-gradient(135deg,oklch(0.50_0.10_200),oklch(0.35_0.08_280))] font-[family:var(--font-serif)] text-base text-white">

@@ -11,13 +11,15 @@
   "dependencies": {
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "cytoscape": "^3.30.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "latest",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "@types/cytoscape": "^3.21.7",
     "postcss": "latest",
     "tailwindcss": "latest",
     "typescript": "latest"

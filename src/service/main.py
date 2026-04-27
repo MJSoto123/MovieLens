@@ -16,6 +16,7 @@ from src.service.schemas import (
     MetricName,
     UserSummaryResponse,
 )
+from src.service.routers.graph import router as graph_router
 from src.service.services.recommendation_service import RecommendationEngine
 from src.service.services.tmdb_service import TmdbService
 from src.storage.repository import PostgresRepository
@@ -75,6 +76,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(graph_router, prefix="/api")
 
 
 @app.get("/health", response_model=HealthResponse)

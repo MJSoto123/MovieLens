@@ -1,3 +1,6 @@
 fastapi
 uvicorn[standard]
 psycopg[binary]
+networkx
+scipy
+python-louvain

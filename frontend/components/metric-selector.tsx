@@ -9,6 +9,7 @@ type MetricSelectorProps = {
   metrics: Metric[];
   selectedMetricId: Metric["id"];
   onMetricChange: (metricId: Metric["id"]) => void;
+  compact?: boolean;
 };
 
 const ICON_BY_METRIC: Record<Metric["id"], "users" | "compass" | "sparkles" | "film"> = {
@@ -22,6 +23,7 @@ export function MetricSelector({
   metrics,
   selectedMetricId,
   onMetricChange,
+  compact = false,
 }: MetricSelectorProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
@@ -43,12 +45,14 @@ export function MetricSelector({
   const current = metrics.find((metric) => metric.id === selectedMetricId) ?? metrics[0];
 
   return (
-    <div ref={ref} className="relative min-w-[320px] max-w-[420px] flex-1">
+    <div ref={ref} className={`relative ${compact ? "w-[260px]" : "min-w-[320px] max-w-[420px] flex-1"}`}>
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
-        className="flex w-full items-center gap-4 rounded-2xl border border-white/10 bg-[var(--surface)] px-4 py-3 text-left transition hover:border-white/20 hover:bg-[var(--surface-2)] data-[open=true]:shadow-[0_0_0_3px_color-mix(in_oklch,var(--accent)_15%,transparent)]"
+        className={`flex w-full items-center gap-4 rounded-2xl border border-white/10 bg-[var(--surface)] text-left transition hover:border-white/20 hover:bg-[var(--surface-2)] data-[open=true]:shadow-[0_0_0_3px_color-mix(in_oklch,var(--accent)_15%,transparent)] ${
+          compact ? "px-3 py-2.5" : "px-4 py-3"
+        }`}
         data-open={open}
       >
         <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[color:color-mix(in_oklch,var(--accent)_12%,transparent)] text-[var(--accent)]">
@@ -101,9 +105,6 @@ export function MetricSelector({
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block text-sm font-medium text-[var(--fg)]">{metric.name}</span>
-                  <span className="mt-1 block text-xs leading-relaxed text-[var(--muted)]">
-                    {metric.description}
-                  </span>
                 </span>
                 {active ? (
                   <span className="mt-1 text-[var(--accent)]">
